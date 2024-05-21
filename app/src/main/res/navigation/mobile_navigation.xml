@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.project.kotlin9.ui.home.HomeFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_registationFragment"
+            app:destination="@id/nav_registation" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_registation"
+        android:name="com.project.kotlin9.ui.registation.RegistationFragment"
+        android:label="@string/menu_reg"
+        tools:layout="@layout/fragment_registation" />
+    <fragment
+        android:id="@+id/nav_editt"
+        android:name="com.project.kotlin9.ui.edit.EditFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_edit" />
+    <fragment
+        android:id="@+id/nav_edit"
+        android:name="com.project.kotlin9.ui.editPage.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_edit_user" />
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.project.kotlin9.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/nav_music"
+        android:name="com.project.kotlin9.ui.music.MusicFragment"
+        android:label="@string/menu_music"
+        tools:layout="@layout/fragment_music" >
+        <action
+            android:id="@+id/action_nav_music_to_refFragment"
+            app:destination="@id/refFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/refFragment"
+        android:name="com.project.kotlin9.ui.ref.RefFragment"
+        android:label="fragment_ref"
+        tools:layout="@layout/fragment_ref" />
+</navigation>

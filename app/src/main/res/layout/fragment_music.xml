@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Local Music"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/localMusicRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play" />
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pause"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop" />
+    </LinearLayout>
+</LinearLayout>
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/layoutMusic"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".ui.music.MusicFragment">-->
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/buttonplay"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="46dp"-->
+<!--        android:src="@drawable/ic_fun_play"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline7"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/editStream" />-->
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/buttonpause"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/ic_fun_pause"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/buttonplay"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline6"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/buttonplay" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editStream"-->
+<!--        android:layout_width="351dp"-->
+<!--        android:layout_height="62dp"-->
+<!--        android:layout_marginTop="200dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="@string/hintStream"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/buttonpause"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline7"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/buttonup"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:src="@drawable/ic_fun_up"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/buttonplay"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/buttonplay"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/buttonplay" />-->
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/buttondown"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/ic_fun_down"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/buttonup"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/buttonpause"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/buttonup" />-->
+
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline6"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintGuide_percent="0.75" />-->
+
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline7"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintGuide_percent="0.25" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/buttontoRef"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Ссылки"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline6"-->
+<!--        app:layout_constraintHorizontal_bias="0.491"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline7"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/buttonup"-->
+<!--        app:layout_constraintVertical_bias="0.257" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/currenttext"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/editStream"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

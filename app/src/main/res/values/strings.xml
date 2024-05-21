@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">kotlin9</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_login">Авторизация</string>
+    <string name="menu_gallery">Погода</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_reg">Регистрация</string>
+    <string name="menu_home">Домашняя страницы</string>
+    <string name="menu_edit">Изменения данных</string>
+    <string name="hintpass">Введете пароль</string>
+    <string name="hintlogin">Введите логин</string>
+    <string name="logintext">Войти</string>
+    <string name="registertext">Зарегистрироваться</string>
+    <string name="open_drawer">Открыть</string>
+    <string name="close_drawer">Закрыть</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hintStream">Введите поток</string>
+    <string name="menu_music">Музыка</string>
+    <string name="copy">Копия</string>
+</resources>
