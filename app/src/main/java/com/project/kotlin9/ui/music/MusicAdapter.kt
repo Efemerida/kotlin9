@@ -1,3 +1,4 @@
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ class MusicAdapter(
     }
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
+        Log.d("song", musicList[position].title)
+        holder.bind(title = musicList[position].title)
         holder.itemView.setOnClickListener{
             audioPlayer.playTrack(position)
         }
@@ -31,9 +34,8 @@ class MusicAdapter(
     class MusicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.musicTitleTextView)
 
-        fun bind(title: String, clickListener: (String) -> Unit) {
+        fun bind(title: String) {
             titleTextView.text = title
-            itemView.setOnClickListener { clickListener(title) }
         }
     }
 }

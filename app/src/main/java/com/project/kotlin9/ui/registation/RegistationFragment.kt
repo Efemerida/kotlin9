@@ -56,6 +56,8 @@ class RegistationFragment : Fragment() {
         binding.registerButton.setOnClickListener {
             val db = Firebase.firestore
             FirebaseFirestore.setLoggingEnabled(true);
+            var p1 = binding.confirmPassword.text
+            var p2 = binding.password.text
 
             if(binding.firstName.text.isBlank()){
                 Toast.makeText(context, "Введите имя", Toast.LENGTH_SHORT).show()
@@ -73,7 +75,7 @@ class RegistationFragment : Fragment() {
                 Toast.makeText(context, "Подтвердите пароль", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            else if(!binding.confirmPassword.text.equals(binding.password.text)){
+            else if(!binding.confirmPassword.text.toString().equals(binding.password.text.toString())){
                 Toast.makeText(context, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -81,26 +83,36 @@ class RegistationFragment : Fragment() {
                 Toast.makeText(context, "Введите дату рождения", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            binding.progressBar.visibility = View.VISIBLE
+            db.collection("users")
+                .whereEqualTo("login", binding.username.text.toString())
+                .get().addOnSuccessListener { documents ->
+                    binding.progressBar.visibility = View.GONE
+                    if(!documents.isEmpty){
+                        Toast.makeText(context, "Пользователь с такиим логином уже существует", Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        val userbld= User.Builder()
+                            .username(binding.firstName.text.toString())
+                            .usersurname(binding.lastName.text.toString())
+                            .login(binding.username.text.toString())
+                            .password(binding.password.text.toString())
+                            .date(binding.birthdate.text.toString())
 
-            val userbld= User.Builder()
-                .username(binding.firstName.text.toString())
-                .usersurname(binding.lastName.text.toString())
-                .login(binding.username.text.toString())
-                .password(binding.password.text.toString())
-                .date(binding.birthdate.text.toString())
+                        if(this::uri.isInitialized){
 
-            if(this::uri.isInitialized){
-
-                userbld.image(imagebytes)
-            }
-            val user =userbld.build()
-            db.collection("users").add(user).addOnSuccessListener { documentReference ->
-                Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-                .addOnFailureListener { e ->
-                    Log.w("TAG", "Error adding document", e)
+                            userbld.image(imagebytes)
+                        }
+                        val user =userbld.build()
+                        db.collection("users").add(user).addOnSuccessListener { documentReference ->
+                            Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
+                        }
+                            .addOnFailureListener { e ->
+                                Log.w("TAG", "Error adding document", e)
+                            }
+                        findNavController().popBackStack()
+                    }
                 }
-            findNavController().popBackStack()
 
         }
         return root

@@ -23,12 +23,12 @@
     <fragment
         android:id="@+id/nav_editt"
         android:name="com.project.kotlin9.ui.edit.EditFragment"
-        android:label="@string/menu_home"
+        android:label="Изменение данных"
         tools:layout="@layout/fragment_edit" />
     <fragment
         android:id="@+id/nav_edit"
         android:name="com.project.kotlin9.ui.editPage.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="Профиль"
         tools:layout="@layout/fragment_edit_user" />
     <fragment
         android:id="@+id/nav_gallery"

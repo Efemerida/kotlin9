@@ -62,4 +62,14 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+
+    // MediaPlayer library (if not already included)
+    implementation("androidx.media:media:1.3.1")
+
+
 }
+

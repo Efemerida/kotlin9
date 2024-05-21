@@ -2,6 +2,7 @@ package com.project.kotlin9.ui.music
 
 import AudioPlayer
 import MusicAdapter
+import TrackAdapter
 import android.Manifest
 import android.content.ContentResolver
 import android.content.Context
@@ -10,6 +11,7 @@ import android.database.Cursor
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +22,27 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.example.yourapp.MusicPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.project.kotlin9.R
 import com.project.kotlin9.databinding.FragmentMusicBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import org.json.JSONException
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class MusicFragment : Fragment() {
@@ -43,59 +63,100 @@ class MusicFragment : Fragment() {
     private val REQUEST_PERMISSION_CODE = 123
     private lateinit var player : AudioPlayer
 
+    private val clientId = "6a670c0f"
+    private lateinit var jamendoApi: JamendoApi
+    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var mediaPlayer2: MediaPlayer
+    private lateinit var requestQueue: RequestQueue
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_music, container, false)
-        localMusicRecyclerView = view.findViewById(R.id.localMusicRecyclerView)
-        localMusicRecyclerView.layoutManager = LinearLayoutManager(context)
-        btnPlay = view.findViewById(R.id.btnPlay)
-        btnPause = view.findViewById(R.id.btnPause)
-        btnStop = view.findViewById(R.id.btnStop)
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE
-            )
-        }
-
-
-        var songs = getAllAudio(requireContext())
-        player = AudioPlayer(requireContext())
-        player.initializeMediaPlayer()
-
-
-        localMusicRecyclerView.adapter = MusicAdapter(player, songs!!)
-
-        loadLocalMusic()
-
-        player.setAudioList(songs)
 
 
 
-        btnPlay.setOnClickListener {
+        val viewPager = view.findViewById<androidx.viewpager2.widget.ViewPager2>(R.id.viewPager)
+        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
 
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.READ_MEDIA_AUDIO),
-                    REQUEST_PERMISSION_CODE
-                )
+        val adapter = MusicPagerAdapter(requireActivity())
+        viewPager.adapter = adapter
 
-            player.play()
-        }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "Локальная музыка"
+                1 -> "Jamendo музыка"
+                else -> null
+            }
+        }.attach()
 
-        btnPause.setOnClickListener {
-            player.pause()
-        }
 
-        btnStop.setOnClickListener {
-            stopMusic()
-        }
+
+//        localMusicRecyclerView = view.findViewById(R.id.localMusicRecyclerView)
+//        localMusicRecyclerView.layoutManager = LinearLayoutManager(context)
+//        btnPlay = view.findViewById(R.id.btnPlay)
+//        btnPause = view.findViewById(R.id.btnPause)
+//        btnStop = view.findViewById(R.id.btnStop)
+//
+//        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+//            != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(
+//                requireActivity(),
+//                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+//                REQUEST_PERMISSION_CODE
+//            )
+//        }
+
+
+//        var songs = getAllAudio(requireContext())
+//        player = AudioPlayer(requireContext())
+//        player.initializeMediaPlayer()
+//
+//
+//        localMusicRecyclerView.adapter = MusicAdapter(player, songs!!)
+//
+//        loadLocalMusic()
+//
+//        player.setAudioList(songs)
+//
+//
+//
+//        btnPlay.setOnClickListener {
+//
+//                ActivityCompat.requestPermissions(
+//                    requireActivity(),
+//                    arrayOf(Manifest.permission.READ_MEDIA_AUDIO),
+//                    REQUEST_PERMISSION_CODE
+//                )
+//
+//            player.play()
+//        }
+//
+//        btnPause.setOnClickListener {
+//            player.pause()
+//        }
+//
+//        btnStop.setOnClickListener {
+//            stopMusic()
+//        }
+
+//---------------------------------------------------------------
+//        mediaPlayer = MediaPlayer()
+//
+//        val recyclerView: RecyclerView = localMusicRecyclerView
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//
+//        trackAdapter = TrackAdapter(emptyList()) { track ->
+//            playTrack(track)
+//        }
+//        recyclerView.adapter = trackAdapter
+//
+//        requestQueue = Volley.newRequestQueue(requireContext())
+//
+//        loadTracks()
+
 
 
         return view
@@ -181,6 +242,62 @@ class MusicFragment : Fragment() {
 
     }
 
+    private fun loadTracks() {
+        val url = "https://api.jamendo.com/v3.0/tracks/?client_id=6a670c0f&format=json&limit=10"
+
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                try {
+                    val results = response.getJSONArray("results")
+                    val tracks = mutableListOf<Track>()
+
+                    for (i in 0 until results.length()) {
+                        val trackJson = results.getJSONObject(i)
+                        val track = Track(
+                            id = trackJson.getString("id"),
+                            name = trackJson.getString("name"),
+                            artist_name = trackJson.getString("artist_name"),
+                            audio = trackJson.getString("audio")
+                        )
+                        tracks.add(track)
+                    }
+
+                    trackAdapter = TrackAdapter(tracks) { track ->
+                        playTrack(track)
+                    }
+                    localMusicRecyclerView.adapter = trackAdapter
+
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Toast.makeText(requireContext(), "Error parsing JSON response", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                Log.e("MusicActivity", "Error: ${error.message}")
+                Toast.makeText(requireContext(), "Failed to load tracks", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        // Установка времени таймаута
+        jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
+            60000, // Время ожидания в миллисекундах
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Количество повторных попыток
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        requestQueue.add(jsonObjectRequest)
+    }
+
+        private fun playTrack(track: Track) {
+        try {
+            mediaPlayer!!.reset()
+            mediaPlayer!!.setDataSource(track.audio)
+            mediaPlayer!!.prepare()
+            mediaPlayer!!.start()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
     companion object {
         fun getAllAudio(context: Context): List<AudioData> {
             val audioList = mutableListOf<AudioData>()
